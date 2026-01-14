@@ -1,25 +1,58 @@
-import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+    const { login, user } = useAuth();
+    const navigate = useNavigate();
 
-  return (
-    <div>
-      <h2>Login</h2>
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
-      <button onClick={() => { login("user"); navigate("/dashboard"); }}>
-        Entrar como Usuario
-      </button>
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-      <button onClick={() => { login("admin"); navigate("/admin"); }}>
-        Entrar como Admin
-      </button>
+        const loggedUser = login(email, password);
 
-      <button onClick={() => navigate("/guest")}>
-        Entrar como Invitado
-      </button>
-    </div>
-  );
+        if (!loggedUser) {
+            setError("Credenciales incorrectas");
+            return;
+        }
+
+        // 🔑 USAMOS EL ROL REAL
+        if (loggedUser.role === "admin") {
+            navigate("/admin");
+        } else {
+            navigate("/dashboard");
+        }
+    };
+
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <h2>Login</h2>
+
+            <input
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {error && <p style={{ color: "red" }}>{error}</p>}
+
+            <button type="submit">Entrar</button>
+
+            <button type="button" onClick={() => navigate("/guest")}>
+                Entrar como invitado
+            </button>
+        </form>
+    );
 }
