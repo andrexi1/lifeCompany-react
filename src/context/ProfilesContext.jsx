@@ -6,13 +6,10 @@ export function ProfilesProvider({ children }) {
   const [profiles, setProfiles] = useState([]);
 
   const addProfile = (profile) => {
-    setProfiles((prev) => [...prev, { id: Date.now(), ...profile }]);
-  };
+    console.log("Perfil recibido:", JSON.stringify(profile, null, 2));
 
-  const updateProfile = (id, updatedProfile) => {
-    setProfiles((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, ...updatedProfile } : p))
-    );
+
+    setProfiles((prev) => [...prev, profile]);
   };
 
   const deleteProfile = (id) => {
@@ -21,7 +18,11 @@ export function ProfilesProvider({ children }) {
 
   return (
     <ProfilesContext.Provider
-      value={{ profiles, addProfile, updateProfile, deleteProfile }}
+      value={{
+        profiles,
+        addProfile,
+        deleteProfile,
+      }}
     >
       {children}
     </ProfilesContext.Provider>

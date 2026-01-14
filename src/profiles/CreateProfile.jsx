@@ -1,127 +1,71 @@
 import { useState } from "react";
+import { useProfiles } from "../context/ProfilesContext";
 
 export default function CreateProfile() {
-  const [step, setStep] = useState(1);
+  const { addProfile } = useProfiles();
 
-  const [form, setForm] = useState({
-    nombre: "",
-    edad: "",
-    genero: "",
-    nivelEstudio: "",
-    pais: "",
-  });
-
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const next = () => setStep(step + 1);
-  const back = () => setStep(step - 1);
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
+  const [education, setEducation] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Perfil guardado:", form);
-    alert("Perfil guardado correctamente");
+
+    const newProfile = {
+      id: Date.now(),
+      name,
+      age: Number(age),
+      gender,
+      education,
+    };
+
+    console.log("Enviando perfil:", newProfile);
+
+    addProfile(newProfile);
+
+    setName("");
+    setAge("");
+    setGender("");
+    setEducation("");
   };
 
   return (
-    <div>
-      <h3>Nuevo Perfil</h3>
+    <form onSubmit={handleSubmit}>
+      <h3>Nuevo perfil</h3>
 
-      <form onSubmit={handleSubmit}>
-        {/* PASO 1 */}
-        {step === 1 && (
-          <>
-            <label>Nombre</label>
-            <input
-              name="nombre"
-              value={form.nombre}
-              onChange={handleChange}
-              required
-            />
+      <input
+        placeholder="Nombre"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
-            <label>Edad</label>
-            <input
-              type="number"
-              name="edad"
-              value={form.edad}
-              onChange={handleChange}
-              required
-            />
-          </>
-        )}
+      <input
+        type="number"
+        placeholder="Edad"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+      />
 
-        {/* PASO 2 */}
-        {step === 2 && (
-          <>
-            <label>Género</label>
-            <select
-              name="genero"
-              value={form.genero}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Selecciona</option>
-              <option value="masculino">Masculino</option>
-              <option value="femenino">Femenino</option>
-              <option value="otro">Otro</option>
-            </select>
-          </>
-        )}
+      <select value={gender} onChange={(e) => setGender(e.target.value)}>
+        <option value="">Género</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Femenino">Femenino</option>
+        <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+      </select>
 
-        {/* PASO 3 */}
-        {step === 3 && (
-          <>
-            <label>Nivel de estudio</label>
-            <select
-              name="nivelEstudio"
-              value={form.nivelEstudio}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Selecciona</option>
-              <option value="primaria">Primaria</option>
-              <option value="secundaria">Secundaria</option>
-              <option value="universitario">Universitario</option>
-            </select>
-          </>
-        )}
+      <select
+        value={education}
+        onChange={(e) => setEducation(e.target.value)}
+      >
+        <option value="">Nivel educativo</option>
+        <option value="Primaria">Primaria</option>
+        <option value="Secundaria">Secundaria</option>
+        <option value="Universitario">Universitario</option>
+        <option value="Posgrado">Posgrado</option>
+      </select>
 
-        {/* PASO 4 */}
-        {step === 4 && (
-          <>
-            <label>País</label>
-            <input
-              name="pais"
-              value={form.pais}
-              onChange={handleChange}
-              required
-            />
-          </>
-        )}
-
-        <br />
-
-        {/* BOTONES */}
-        <div>
-          {step > 1 && (
-            <button type="button" onClick={back}>
-              Atrás
-            </button>
-          )}
-
-          {step < 4 && (
-            <button type="button" onClick={next}>
-              Siguiente
-            </button>
-          )}
-
-          {step === 4 && <button type="submit">Guardar</button>}
-        </div>
-      </form>
-    </div>
+      <button type="submit">Crear perfil</button>
+    </form>
   );
 }

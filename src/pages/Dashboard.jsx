@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import ProfilesList from "./ProfilesList";
+import ProfilesList from "../profiles/ProfileList";
 import CreateProfile from "../profiles/CreateProfile";
 
 export default function Dashboard() {
