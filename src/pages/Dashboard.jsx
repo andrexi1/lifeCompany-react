@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import ProfilesList from "./ProfilesList";
-import CreateProfile from "./CreateProfile";
+import CreateProfile from "../profiles/CreateProfile";
 
 export default function Dashboard() {
   const { logout } = useAuth();
