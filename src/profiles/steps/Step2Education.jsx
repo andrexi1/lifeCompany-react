@@ -3,30 +3,36 @@ export default function Step2Education({ data, setData }) {
     <div>
       <h3>Educación y trabajo</h3>
 
-      <label>Nivel de estudios</label>
-      <select
-        value={data.education}
-        onChange={(e) => setData({ ...data, education: e.target.value })}
-      >
-        <option value="">Seleccione</option>
-        <option value="Sin estudios">Sin estudios</option>
-        <option value="Primaria">Primaria</option>
-        <option value="Secundaria">Secundaria</option>
-        <option value="Tecnico">Técnico / Tecnólogo</option>
-        <option value="Universitario">Universitario</option>
-        <option value="Posgrado">Posgrado</option>
-      </select>
+      <div className="form-group">
+        <label>¿Cuál es tu nivel máximo de estudios alcanzado? *</label>
+        <select
+          value={data.education}
+          onChange={(e) => setData({ ...data, education: e.target.value })}
+          required
+        >
+          <option value="">Selecciona</option>
+          <option value="Sin estudios formales">Sin estudios formales</option>
+          <option value="Primaria">Primaria</option>
+          <option value="Secundaria">Secundaria</option>
+          <option value="Técnico / Tecnólogo">Técnico / Tecnólogo</option>
+          <option value="Universitario">Universitario</option>
+          <option value="Posgrado">Posgrado</option>
+        </select>
+      </div>
 
-      <label>Tipo de trabajo</label>
-      <select
-        value={data.jobType}
-        onChange={(e) => setData({ ...data, jobType: e.target.value })}
-      >
-        <option value="">Seleccione</option>
-        <option value="Sedentario">Sedentario</option>
-        <option value="Mixto">Mixto</option>
-        <option value="Fisico">Físico</option>
-      </select>
+      <div className="form-group">
+        <label>¿Cómo describirías principalmente tu trabajo o actividad diaria? *</label>
+        <select
+          value={data.jobType}
+          onChange={(e) => setData({ ...data, jobType: e.target.value })}
+          required
+        >
+          <option value="">Selecciona</option>
+          <option value="Sedentario">Sedentario (oficina, computador)</option>
+          <option value="Mixto">Mixto (algo de movimiento)</option>
+          <option value="Físico">Físico (movimiento constante)</option>
+        </select>
+      </div>
     </div>
   );
 }

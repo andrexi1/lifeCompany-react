@@ -1,6 +1,53 @@
-* {
-  box-sizing: border-box;
+/* src/index.css o src/styles/global.css */
+
+:root {
+  --primary: #0066cc;
+  --primary-dark: #0055aa;
+  --secondary: #6c757d;
+  --success: #16a34a;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #2c3e50;
+  --gray: #4b5563;
+  --shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f5f9;
+  color: var(--dark);
   margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
+}
+
+h1, h2, h3 {
+  color: var(--dark);
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 }
