@@ -14,7 +14,7 @@ export default function CreateProfile() {
         createdAt: serverTimestamp(),
       });
       alert("Perfil creado con éxito");
-      navigate("/profiles"); // redirige al listado de perfiles automáticamente
+      navigate("/profiles"); // Redirige automáticamente al listado de perfiles
     } catch (error) {
       console.error("Error creando perfil:", error);
       alert("No se pudo crear el perfil");
@@ -28,12 +28,12 @@ export default function CreateProfile() {
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-start",
-    background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
+    background: "linear-gradient(135deg, #2563eb, #FFB88C)",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   };
 
   const cardStyle = {
-    background: "#fff",
+    background: "#16ace8",
     padding: "3rem",
     borderRadius: "16px",
     boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
@@ -53,6 +53,10 @@ export default function CreateProfile() {
     textAlign: "center",
   };
 
+  const wizardContainerStyle = {
+    width: "100%",
+  };
+
   const buttonStyle = {
     padding: "16px 36px",
     borderRadius: "12px",
@@ -67,19 +71,15 @@ export default function CreateProfile() {
     boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
   };
 
-  const buttonHover = {
-    transform: "translateY(-3px)",
-    boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
-  };
-
   const backButtonStyle = {
     ...buttonStyle,
     background: "#6c757d",
     marginTop: "1.5rem",
   };
 
-  const wizardContainerStyle = {
-    width: "100%",
+  const hoverEffect = {
+    transform: "translateY(-3px)",
+    boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
   };
 
   return (
@@ -87,7 +87,7 @@ export default function CreateProfile() {
       <div style={cardStyle}>
         <h2 style={titleStyle}>Crear Nuevo Perfil</h2>
 
-        {/* Formulario de Wizard */}
+        {/* Formulario Wizard */}
         <div style={wizardContainerStyle}>
           <ProfileWizard onSubmit={handleSubmit} />
         </div>
@@ -96,7 +96,7 @@ export default function CreateProfile() {
         <button
           type="button"
           style={backButtonStyle}
-          onMouseOver={(e) => Object.assign(e.currentTarget.style, buttonHover)}
+          onMouseOver={(e) => Object.assign(e.currentTarget.style, hoverEffect)}
           onMouseOut={(e) => Object.assign(e.currentTarget.style, backButtonStyle)}
           onClick={() => navigate("/profiles")}
         >

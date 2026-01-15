@@ -11,7 +11,6 @@ export default function EditProfile() {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Cargar perfil desde Firebase
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -34,7 +33,11 @@ export default function EditProfile() {
   }, [id]);
 
   if (loading) {
-    return <p style={{ padding: "2rem", textAlign: "center" }}>Cargando perfil...</p>;
+    return (
+      <div style={{ padding: "4rem", textAlign: "center", fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana" }}>
+        <h2>Cargando perfil...</h2>
+      </div>
+    );
   }
 
   if (!profileData) {
@@ -42,30 +45,31 @@ export default function EditProfile() {
       <div style={{
         padding: "4rem",
         textAlign: "center",
-        background: "#f8f9fa",
+        background: "#f0f9ff",
         borderRadius: "12px",
         maxWidth: "600px",
         margin: "2rem auto",
-        boxShadow: "0 6px 20px rgba(0,0,0,0.1)"
+        boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana"
       }}>
-        <h2>Perfil no encontrado</h2>
+        <h2 style={{ color: "#b91c1c" }}>Perfil no encontrado</h2>
         <p>El perfil que intentas editar no existe o fue eliminado.</p>
         <button
           onClick={() => navigate("/dashboard")}
           style={{
             marginTop: "1.5rem",
-            padding: "12px 24px",
-            background: "#0066cc",
+            padding: "12px 28px",
+            background: "#2563eb",
             color: "white",
             border: "none",
             borderRadius: "8px",
-            cursor: "pointer",
             fontWeight: "600",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+            cursor: "pointer",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
             transition: "all 0.2s ease"
           }}
-          onMouseOver={(e) => e.currentTarget.style.transform = "translateY(-2px)"}
-          onMouseOut={(e) => e.currentTarget.style.transform = "translateY(0)"}
+          onMouseOver={e => e.currentTarget.style.transform = "translateY(-2px)"}
+          onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
         >
           Volver al Dashboard
         </button>
@@ -78,9 +82,8 @@ export default function EditProfile() {
       const docRef = doc(db, "profiles", id);
       await updateDoc(docRef, {
         ...updatedData,
-        updatedAt: serverTimestamp(), // registra fecha de actualización
+        updatedAt: serverTimestamp(),
       });
-
       alert("¡Perfil actualizado con éxito!");
       navigate("/profiles");
     } catch (error) {
@@ -92,22 +95,22 @@ export default function EditProfile() {
   return (
     <div style={{
       padding: "2rem",
-      maxWidth: "900px",
-      margin: "0 auto",
-      background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
       minHeight: "100vh",
-      borderRadius: "12px"
+      background: "linear-gradient(135deg, #2563eb, #FFB88C)",
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana"
     }}>
       <div style={{
         background: "#ffffff",
         padding: "2.5rem",
         borderRadius: "16px",
-        boxShadow: "0 12px 30px rgba(0,0,0,0.15)"
+        boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+        maxWidth: "900px",
+        margin: "0 auto"
       }}>
-        <h2 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
+        <h2 style={{ fontSize: "2.5rem", marginBottom: "0.5rem", color: "#111827" }}>
           Editar Perfil: {profileData.name || "Sin nombre"}
         </h2>
-        <p style={{ color: "#666", marginBottom: "2rem", fontSize: "1.1rem" }}>
+        <p style={{ color: "#4b5563", marginBottom: "2rem", fontSize: "1.1rem" }}>
           Modifica la información y guarda los cambios
         </p>
 
@@ -133,8 +136,8 @@ export default function EditProfile() {
               boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
               transition: "all 0.2s ease"
             }}
-            onMouseOver={(e) => e.currentTarget.style.transform = "translateY(-3px)"}
-            onMouseOut={(e) => e.currentTarget.style.transform = "translateY(0)"}
+            onMouseOver={e => e.currentTarget.style.transform = "translateY(-3px)"}
+            onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
           >
             Volver al Dashboard
           </button>

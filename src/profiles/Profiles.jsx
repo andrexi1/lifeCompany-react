@@ -30,11 +30,11 @@ export default function Profiles() {
   const containerStyle = {
     minHeight: "100vh",
     padding: "2rem",
-    background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
+    background: "linear-gradient(135deg, #2563eb, #FFB88C)",
   };
 
   const cardStyle = {
-    background: "white",
+    background: "rgba(115, 100, 162, 0.92)",
     padding: "1.5rem",
     borderRadius: "12px",
     boxShadow: "0 6px 20px rgba(0,0,0,0.15)",

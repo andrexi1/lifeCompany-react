@@ -9,7 +9,6 @@ export default function FullProfilesList() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Cargar perfiles desde Firebase
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
@@ -26,7 +25,6 @@ export default function FullProfilesList() {
     fetchProfiles();
   }, []);
 
-  // Eliminar perfil
   const handleDelete = async (id) => {
     if (!window.confirm("¿Realmente deseas eliminar este perfil?")) return;
 
@@ -42,17 +40,16 @@ export default function FullProfilesList() {
 
   const containerStyle = {
     padding: "2rem",
-    maxWidth: "1200px",
-    margin: "0 auto",
-    background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
-    minHeight: "100vh"
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #2563eb, #FFB88C)",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
   };
 
   const cardStyle = {
     borderRadius: "12px",
     padding: "1.5rem",
     background: "#ffffff",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
     transition: "transform 0.2s, box-shadow 0.2s",
     cursor: "default"
   };
@@ -78,16 +75,16 @@ export default function FullProfilesList() {
 
   if (profiles.length === 0) {
     return (
-      <div style={{ padding: "4rem 2rem", textAlign: "center", background: "#f8f9fa", borderRadius: "12px" }}>
+      <div style={{ padding: "4rem 2rem", textAlign: "center", background: "#f0f9ff", borderRadius: "12px" }}>
         <h2>Aún no hay perfiles creados</h2>
-        <p style={{ color: "#666", margin: "1rem 0 2rem" }}>
+        <p style={{ color: "#4b5563", margin: "1rem 0 2rem" }}>
           Crea tu primer perfil para comenzar a registrar datos
         </p>
-        <button 
+        <button
           onClick={() => navigate("/create-profile")}
           style={{ ...buttonStyle, background: "#0066cc", color: "white" }}
-          onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
-          onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
+          onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
+          onMouseOut={e => Object.assign(e.currentTarget.style, buttonStyle)}
         >
           Crear mi primer perfil
         </button>
@@ -98,14 +95,14 @@ export default function FullProfilesList() {
   return (
     <div style={containerStyle}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
-        <h2 style={{ color: "#ffffff" }}>Lista Completa de Perfiles ({profiles.length})</h2>
+        <h2 style={{ color: "#111827" }}>Lista Completa de Perfiles ({profiles.length})</h2>
         
         <div style={{ display: "flex", gap: "1rem" }}>
           <button
             onClick={() => navigate("/create-profile")}
             style={{ ...buttonStyle, background: "#0066cc", color: "white" }}
-            onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
-            onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
+            onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
+            onMouseOut={e => Object.assign(e.currentTarget.style, buttonStyle)}
           >
             + Nuevo Perfil
           </button>
@@ -113,8 +110,8 @@ export default function FullProfilesList() {
           <button
             onClick={() => navigate("/dashboard")}
             style={{ ...buttonStyle, background: "#6c757d", color: "white" }}
-            onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
-            onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
+            onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
+            onMouseOut={e => Object.assign(e.currentTarget.style, buttonStyle)}
           >
             Volver al Dashboard
           </button>
@@ -122,14 +119,14 @@ export default function FullProfilesList() {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "1.5rem" }}>
-        {profiles.map((profile) => (
+        {profiles.map(profile => (
           <div
             key={profile.id}
             style={cardStyle}
             onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
             onMouseOut={e => Object.assign(e.currentTarget.style, cardStyle)}
           >
-            <h3 style={{ marginTop: 0, marginBottom: "1rem" }}>
+            <h3 style={{ marginTop: 0, marginBottom: "1rem", color: "#111827" }}>
               {profile.name || "Perfil sin nombre"}
             </h3>
 
@@ -148,8 +145,8 @@ export default function FullProfilesList() {
               <button
                 onClick={() => navigate(`/edit/${profile.id}`)}
                 style={{ ...buttonStyle, background: "#0066cc", color: "white" }}
-                onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
-                onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
+                onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
+                onMouseOut={e => Object.assign(e.currentTarget.style, buttonStyle)}
               >
                 Editar
               </button>
@@ -157,8 +154,8 @@ export default function FullProfilesList() {
               <button
                 onClick={() => navigate(`/profile/${profile.id}`)}
                 style={{ ...buttonStyle, background: "#3b82f6", color: "white" }}
-                onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
-                onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
+                onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
+                onMouseOut={e => Object.assign(e.currentTarget.style, buttonStyle)}
               >
                 Ver Detalle
               </button>
@@ -166,8 +163,8 @@ export default function FullProfilesList() {
               <button
                 onClick={() => handleDelete(profile.id)}
                 style={{ ...buttonStyle, background: "#dc3545", color: "white" }}
-                onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
-                onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
+                onMouseOver={e => Object.assign(e.currentTarget.style, hoverEffect)}
+                onMouseOut={e => Object.assign(e.currentTarget.style, buttonStyle)}
               >
                 Eliminar
               </button>
