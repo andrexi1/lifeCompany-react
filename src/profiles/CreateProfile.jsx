@@ -13,9 +13,8 @@ export default function CreateProfile() {
         ...newProfileData,
         createdAt: serverTimestamp(),
       });
-
-      // Perfil guardado, no redirecciona automáticamente
-      console.log("Perfil creado con éxito:", newProfileData);
+      alert("Perfil creado con éxito");
+      navigate("/profiles"); // redirige al listado de perfiles automáticamente
     } catch (error) {
       console.error("Error creando perfil:", error);
       alert("No se pudo crear el perfil");
@@ -30,10 +29,11 @@ export default function CreateProfile() {
     justifyContent: "center",
     alignItems: "flex-start",
     background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   };
 
   const cardStyle = {
-    background: "#ffffff",
+    background: "#fff",
     padding: "3rem",
     borderRadius: "16px",
     boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
@@ -42,6 +42,7 @@ export default function CreateProfile() {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    transition: "all 0.3s ease",
   };
 
   const titleStyle = {
@@ -61,7 +62,7 @@ export default function CreateProfile() {
     cursor: "pointer",
     transition: "all 0.2s ease",
     background: "#0066cc",
-    color: "white",
+    color: "#fff",
     marginTop: "2rem",
     boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
   };
@@ -77,13 +78,19 @@ export default function CreateProfile() {
     marginTop: "1.5rem",
   };
 
+  const wizardContainerStyle = {
+    width: "100%",
+  };
+
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
         <h2 style={titleStyle}>Crear Nuevo Perfil</h2>
 
         {/* Formulario de Wizard */}
-        <ProfileWizard onSubmit={handleSubmit} />
+        <div style={wizardContainerStyle}>
+          <ProfileWizard onSubmit={handleSubmit} />
+        </div>
 
         {/* Botón para volver */}
         <button

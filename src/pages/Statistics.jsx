@@ -40,7 +40,6 @@ export default function Statistics() {
         setLoading(false);
       }
     };
-
     fetchProfiles();
   }, []);
 
@@ -125,6 +124,7 @@ export default function Statistics() {
     background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
     minHeight: "100vh",
     borderRadius: "12px",
+    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
   };
 
   const cardStyle = {
@@ -134,6 +134,7 @@ export default function Statistics() {
     boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
     marginBottom: "2rem",
     textAlign: "center",
+    transition: "all 0.2s ease",
   };
 
   const titleStyle = {
@@ -249,7 +250,6 @@ export default function Statistics() {
         </div>
       </div>
 
-      {/* Botón para volver al dashboard */}
       <div style={{ textAlign: "center" }}>
         <button
           type="button"
