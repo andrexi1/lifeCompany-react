@@ -25,39 +25,30 @@ const initialFormData = {
     age: "",
     gender: "",
     country: "Colombia",
-
     education: "",
     jobType: "",
-
     activityDays: "",
     activityDuration: "",
-
     sleepHours: "",
     sleepQuality: "",
-
     diet: "",
     alcohol: "",
     smoking: "",
-
     stress: "",
     support: "",
-
     chronicCondition: "",
     healthStatus: "",
 };
 
 export default function ProfileWizard({ onSubmit, initialData = null, isEdit = false }) {
     const navigate = useNavigate();
-
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState(initialData || initialFormData);
     const [errors, setErrors] = useState({});
     const [isCompleted, setIsCompleted] = useState(false);
 
     useEffect(() => {
-        if (initialData) {
-            setFormData(initialData);
-        }
+        if (initialData) setFormData(initialData);
     }, [initialData]);
 
     const totalSteps = steps.length;
@@ -65,13 +56,11 @@ export default function ProfileWizard({ onSubmit, initialData = null, isEdit = f
     const validateCurrentStep = () => {
         const newErrors = {};
         const currentFields = getRequiredFieldsForStep(currentStep);
-
         currentFields.forEach((field) => {
             if (!formData[field] && formData[field] !== 0) {
                 newErrors[field] = "Este campo es obligatorio";
             }
         });
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -116,113 +105,163 @@ export default function ProfileWizard({ onSubmit, initialData = null, isEdit = f
     };
 
     const CurrentComponent = steps[currentStep - 1].component;
-
     const progressPercentage = (currentStep / totalSteps) * 100;
 
-if (isCompleted) {
-  return (
-    <div style={{
-      padding: "4rem 2rem",
-      textAlign: "center",
-      backgroundColor: "#f0f9ff",
-      borderRadius: "12px",
-      maxWidth: "600px",
-      margin: "3rem auto",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
-    }}>
-      <h2 style={{ color: "#15803d", marginBottom: "1rem" }}>
-        ¡{isEdit ? "Perfil actualizado" : "Perfil creado"} con éxito! 🎉
-      </h2>
-      
-      <p style={{ fontSize: "1.1rem", marginBottom: "2.5rem", color: "#374151" }}>
-        Los datos se han guardado correctamente.
-      </p>
+    if (isCompleted) {
+        return (
+            <div style={{
+                padding: "4rem 2rem",
+                maxWidth: "600px",
+                margin: "3rem auto",
+                textAlign: "center",
+                backgroundColor: "#f0f9ff",
+                borderRadius: "12px",
+                boxShadow: "0 6px 25px rgba(0,0,0,0.1)",
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+            }}>
+                <h2 style={{ color: "#15803d", marginBottom: "1rem" }}>
+                    ¡{isEdit ? "Perfil actualizado" : "Perfil creado"} con éxito! 🎉
+                </h2>
+                <p style={{ color: "#374151", fontSize: "1.1rem", marginBottom: "2.5rem" }}>
+                    Los datos se han guardado correctamente.
+                </p>
 
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        maxWidth: "400px",
-        margin: "0 auto"
-      }}>
-        <button
-          onClick={resetWizard}
-          style={{
-            padding: "14px 24px",
-            backgroundColor: "#16a34a",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "1.1rem",
-            fontWeight: "500",
-            cursor: "pointer"
-          }}
-        >
-          Crear {isEdit ? "otro" : "nuevo"} perfil
-        </button>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxWidth: "400px", margin: "0 auto" }}>
+                    <button
+                        onClick={resetWizard}
+                        style={{
+                            padding: "14px 24px",
+                            backgroundColor: "#16a34a",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "8px",
+                            fontSize: "1.1rem",
+                            fontWeight: "500",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease",
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#15803d"}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#16a34a"}
+                    >
+                        Crear {isEdit ? "otro" : "nuevo"} perfil
+                    </button>
 
-        <button
-          onClick={() => navigate("/dashboard")}
-          style={{
-            padding: "14px 24px",
-            backgroundColor: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            fontSize: "1.1rem",
-            fontWeight: "500",
-            cursor: "pointer"
-          }}
-        >
-          Volver al Dashboard
-        </button>
-      </div>
-    </div>
-  );
-}
-    return (
-        <div className="profile-wizard">
-            {/* Barra de progreso */}
-            <div className="progress-container">
-                <div className="progress-bar">
-                    <div
-                        className="progress-fill"
-                        style={{ width: `${progressPercentage}%` }}
-                    />
+                    <button
+                        onClick={() => navigate("/dashboard")}
+                        style={{
+                            padding: "14px 24px",
+                            backgroundColor: "#2563eb",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "8px",
+                            fontSize: "1.1rem",
+                            fontWeight: "500",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease",
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#1d4ed8"}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#2563eb"}
+                    >
+                        Volver al Dashboard
+                    </button>
                 </div>
-                <div className="progress-text">
+            </div>
+        );
+    }
+
+    return (
+        <div style={{
+            maxWidth: "700px",
+            margin: "2rem auto",
+            padding: "2rem",
+            backgroundColor: "#ffffff",
+            borderRadius: "12px",
+            boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+        }}>
+            {/* Barra de progreso */}
+            <div style={{ marginBottom: "2rem" }}>
+                <div style={{
+                    backgroundColor: "#e5e7eb",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    height: "12px",
+                    marginBottom: "0.5rem"
+                }}>
+                    <div style={{
+                        width: `${progressPercentage}%`,
+                        background: "linear-gradient(90deg, #2563eb, #06b6d4)",
+                        height: "100%",
+                        transition: "width 0.3s ease"
+                    }} />
+                </div>
+                <div style={{ textAlign: "right", fontSize: "0.9rem", color: "#374151" }}>
                     Paso {currentStep} de {totalSteps} • {steps[currentStep - 1].title}
                 </div>
             </div>
 
-            {/* Contenido del paso actual */}
-            <div className="step-content">
+            {/* Contenido del paso */}
+            <div style={{ marginBottom: "1rem" }}>
                 <CurrentComponent data={formData} setData={setFormData} />
-
                 {Object.keys(errors).length > 0 && (
-                    <div className="error-box">
+                    <div style={{
+                        backgroundColor: "#fee2e2",
+                        color: "#b91c1c",
+                        padding: "1rem",
+                        borderRadius: "8px",
+                        marginTop: "1rem",
+                        textAlign: "center"
+                    }}>
                         Por favor completa todos los campos obligatorios antes de continuar.
                     </div>
                 )}
             </div>
 
             {/* Botones de navegación */}
-            <div className="wizard-buttons">
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
                 {currentStep > 1 && (
-                    <button type="button" className="btn secondary" onClick={handleBack}>
+                    <button
+                        onClick={handleBack}
+                        style={{
+                            padding: "12px 24px",
+                            borderRadius: "8px",
+                            border: "1px solid #2563eb",
+                            backgroundColor: "#ffffff",
+                            color: "#2563eb",
+                            fontWeight: "500",
+                            cursor: "pointer",
+                            transition: "all 0.2s ease"
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "#2563eb";
+                            e.currentTarget.style.color = "white";
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "#ffffff";
+                            e.currentTarget.style.color = "#2563eb";
+                        }}
+                    >
                         Anterior
                     </button>
                 )}
 
                 <button
-                    type="button"
-                    className="btn primary"
                     onClick={handleNext}
-                    style={{ marginLeft: "auto" }}
+                    style={{
+                        padding: "12px 24px",
+                        borderRadius: "8px",
+                        border: "none",
+                        backgroundColor: "#2563eb",
+                        color: "white",
+                        fontWeight: "500",
+                        cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        marginLeft: "auto"
+                    }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#1d4ed8"}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#2563eb"}
                 >
-                    {currentStep < totalSteps
-                        ? "Siguiente"
-                        : isEdit ? "Guardar Cambios" : "Finalizar y Crear Perfil"}
+                    {currentStep < totalSteps ? "Siguiente" : isEdit ? "Guardar Cambios" : "Finalizar y Crear Perfil"}
                 </button>
             </div>
         </div>

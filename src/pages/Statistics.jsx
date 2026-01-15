@@ -99,29 +99,27 @@ export default function Statistics() {
     }
   }, [profiles]);
 
-  if (loading) {
+  if (loading)
     return (
       <div style={{ padding: "4rem", textAlign: "center" }}>
         <h2>Cargando estadísticas...</h2>
       </div>
     );
-  }
 
-  if (!stats) {
+  if (!stats)
     return (
       <div style={{ padding: "4rem", textAlign: "center" }}>
         <h2>No se pudieron generar las estadísticas</h2>
         <p>Verifica que tus perfiles tengan datos completos y correctos.</p>
       </div>
     );
-  }
 
   // --- Estilos ---
   const containerStyle = {
     padding: "3rem",
     maxWidth: "1200px",
     margin: "0 auto",
-    background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
+    background: "linear-gradient(135deg, #f0f4ff, #d9e4ff)",
     minHeight: "100vh",
     borderRadius: "12px",
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
@@ -131,10 +129,15 @@ export default function Statistics() {
     background: "#ffffff",
     padding: "2.5rem",
     borderRadius: "16px",
-    boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
     marginBottom: "2rem",
     textAlign: "center",
-    transition: "all 0.2s ease",
+    transition: "transform 0.2s, box-shadow 0.2s",
+  };
+
+  const cardHover = {
+    transform: "translateY(-4px)",
+    boxShadow: "0 15px 35px rgba(0,0,0,0.15)",
   };
 
   const titleStyle = {
@@ -145,32 +148,40 @@ export default function Statistics() {
     textAlign: "center",
   };
 
+  const subtitleStyle = {
+    color: "#555",
+    textAlign: "center",
+    marginBottom: "2rem",
+    fontSize: "1.1rem",
+  };
+
   const buttonStyle = {
-    padding: "16px 36px",
+    padding: "14px 32px",
     borderRadius: "12px",
     border: "none",
-    fontSize: "1.3rem",
+    fontSize: "1.2rem",
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
     background: "#0066cc",
     color: "white",
     marginTop: "2rem",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.15)",
   };
 
   const buttonHover = {
     transform: "translateY(-3px)",
-    boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
+    boxShadow: "0 10px 28px rgba(0,0,0,0.2)",
   };
 
   return (
     <div style={containerStyle}>
       <h1 style={titleStyle}>Estadísticas Generales</h1>
-      <p style={{ color: "#666", textAlign: "center", marginBottom: "2rem" }}>
+      <p style={subtitleStyle}>
         Basado en {stats.totalProfiles} perfiles registrados
       </p>
 
+      {/* Estadísticas principales */}
       <div
         style={{
           display: "grid",
@@ -179,30 +190,30 @@ export default function Statistics() {
           marginBottom: "3rem",
         }}
       >
-        <div style={cardStyle}>
-          <h3>Edad promedio</h3>
-          <p style={{ fontSize: "1.8rem", fontWeight: "600" }}>{stats.avgAge} años</p>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Esperanza de vida promedio</h3>
-          <p style={{ fontSize: "1.8rem", fontWeight: "600" }}>{stats.avgLifeExp} años</p>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Fuman (o fumaron ocasionalmente)</h3>
-          <p style={{ fontSize: "1.8rem", fontWeight: "600" }}>{stats.smokingPercent}%</p>
-        </div>
-
-        <div style={cardStyle}>
-          <h3>Buena/Muy buena calidad de sueño</h3>
-          <p style={{ fontSize: "1.8rem", fontWeight: "600" }}>{stats.goodSleepPercent}%</p>
-        </div>
+        {[
+          { label: "Edad promedio", value: `${stats.avgAge} años` },
+          { label: "Esperanza de vida promedio", value: `${stats.avgLifeExp} años` },
+          { label: "Fuman (ocasional/si)", value: `${stats.smokingPercent}%` },
+          { label: "Buena/Muy buena calidad de sueño", value: `${stats.goodSleepPercent}%` },
+        ].map((stat, i) => (
+          <div
+            key={i}
+            style={cardStyle}
+            onMouseOver={(e) => Object.assign(e.currentTarget.style, cardHover)}
+            onMouseOut={(e) => Object.assign(e.currentTarget.style, cardStyle)}
+          >
+            <h3 style={{ marginBottom: "1rem" }}>{stat.label}</h3>
+            <p style={{ fontSize: "1.8rem", fontWeight: "600", color: "#333" }}>
+              {stat.value}
+            </p>
+          </div>
+        ))}
       </div>
 
+      {/* Gráficos */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
         <div style={cardStyle}>
-          <h3>Distribución por Género</h3>
+          <h3 style={{ marginBottom: "1rem" }}>Distribución por Género</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -225,7 +236,7 @@ export default function Statistics() {
         </div>
 
         <div style={cardStyle}>
-          <h3>Esperanza de vida por perfil</h3>
+          <h3 style={{ marginBottom: "1rem" }}>Esperanza de vida por perfil</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
               data={profiles.map((p, i) => ({
@@ -250,6 +261,7 @@ export default function Statistics() {
         </div>
       </div>
 
+      {/* Botón volver */}
       <div style={{ textAlign: "center" }}>
         <button
           type="button"
