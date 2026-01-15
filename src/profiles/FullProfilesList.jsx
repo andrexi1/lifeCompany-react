@@ -1,9 +1,44 @@
+// src/profiles/FullProfilesList.jsx
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useProfiles } from "../context/ProfilesContext";
+import { db } from "../firebase";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 export default function FullProfilesList() {
-  const { profiles, deleteProfile } = useProfiles();
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  // Cargar perfiles desde Firebase
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "profiles"));
+        const profilesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setProfiles(profilesData);
+      } catch (error) {
+        console.error("Error al cargar perfiles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfiles();
+  }, []);
+
+  // Eliminar perfil
+  const handleDelete = async (id) => {
+    if (!window.confirm("¿Realmente deseas eliminar este perfil?")) return;
+
+    try {
+      await deleteDoc(doc(db, "profiles", id));
+      setProfiles(prev => prev.filter(p => p.id !== id));
+      alert("Perfil eliminado con éxito");
+    } catch (error) {
+      console.error("Error al eliminar perfil:", error);
+      alert("No se pudo eliminar el perfil");
+    }
+  };
 
   const containerStyle = {
     padding: "2rem",
@@ -37,25 +72,20 @@ export default function FullProfilesList() {
     boxShadow: "0 8px 24px rgba(0,0,0,0.12)"
   };
 
+  if (loading) {
+    return <p style={{ padding: "2rem", textAlign: "center" }}>Cargando perfiles...</p>;
+  }
+
   if (profiles.length === 0) {
     return (
-      <div style={{ 
-        padding: "4rem 2rem", 
-        textAlign: "center", 
-        background: "#f8f9fa", 
-        borderRadius: "12px" 
-      }}>
+      <div style={{ padding: "4rem 2rem", textAlign: "center", background: "#f8f9fa", borderRadius: "12px" }}>
         <h2>Aún no hay perfiles creados</h2>
         <p style={{ color: "#666", margin: "1rem 0 2rem" }}>
           Crea tu primer perfil para comenzar a registrar datos
         </p>
         <button 
           onClick={() => navigate("/create-profile")}
-          style={{ 
-            ...buttonStyle,
-            background: "#0066cc",
-            color: "white"
-          }}
+          style={{ ...buttonStyle, background: "#0066cc", color: "white" }}
           onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
           onMouseOut={e => Object.assign(e.target.style, buttonStyle)}
         >
@@ -91,12 +121,7 @@ export default function FullProfilesList() {
         </div>
       </div>
 
-      {/* Grid de tarjetas de perfiles */}
-      <div style={{ 
-        display: "grid", 
-        gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", 
-        gap: "1.5rem"
-      }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "1.5rem" }}>
         {profiles.map((profile) => (
           <div
             key={profile.id}
@@ -114,7 +139,7 @@ export default function FullProfilesList() {
               <p style={{ margin: "0.5rem 0" }}>Educación: <strong>{profile.education || "No especificado"}</strong></p>
               {profile.createdAt && (
                 <p style={{ fontSize: "0.9rem", color: "#6b7280", marginTop: "1rem" }}>
-                  Creado: {new Date(profile.createdAt).toLocaleDateString("es-CO")}
+                  Creado: {new Date(profile.createdAt?.toDate?.() || profile.createdAt).toLocaleDateString("es-CO")}
                 </p>
               )}
             </div>
@@ -139,11 +164,7 @@ export default function FullProfilesList() {
               </button>
 
               <button
-                onClick={() => {
-                  if (window.confirm("¿Realmente deseas eliminar este perfil?")) {
-                    deleteProfile(profile.id);
-                  }
-                }}
+                onClick={() => handleDelete(profile.id)}
                 style={{ ...buttonStyle, background: "#dc3545", color: "white" }}
                 onMouseOver={e => Object.assign(e.target.style, hoverEffect)}
                 onMouseOut={e => Object.assign(e.target.style, buttonStyle)}

@@ -1,10 +1,33 @@
-import { useProfiles } from "../context/ProfilesContext";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+// src/pages/Guest.jsx
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer } from "recharts";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Guest() {
-  const { profiles } = useProfiles();
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "profiles"));
+        const profilesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setProfiles(profilesData);
+      } catch (error) {
+        console.error("Error al cargar perfiles de Firebase:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfiles();
+  }, []);
+
+  if (loading) {
+    return <p style={{ padding: "2rem", textAlign: "center" }}>Cargando estadísticas...</p>;
+  }
 
   if (profiles.length === 0) {
     return (
@@ -43,13 +66,21 @@ export default function Guest() {
     <div style={{ padding: "2rem", background: "#F96E5B", minHeight: "100vh" }}>
       <h2 style={{ textAlign: "center", color: "white" }}>Modo Invitado</h2>
 
-      <div style={{ marginTop: "2rem", maxWidth: "700px", marginLeft: "auto", marginRight: "auto", background: "#ffffff", padding: "2rem", borderRadius: "12px", boxShadow: "0 6px 20px rgba(0,0,0,0.1)" }}>
+      <div style={{
+        marginTop: "2rem",
+        maxWidth: "700px",
+        marginLeft: "auto",
+        marginRight: "auto",
+        background: "#ffffff",
+        padding: "2rem",
+        borderRadius: "12px",
+        boxShadow: "0 6px 20px rgba(0,0,0,0.1)"
+      }}>
         <h3 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Estadísticas Generales</h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            {/* Aquí fijamos el dominio para que se vea la escala correcta */}
             <YAxis domain={[0, 'dataMax + 5']} />
             <Tooltip />
             <Bar dataKey="value" fill="#3b82f6" />
@@ -57,7 +88,6 @@ export default function Guest() {
         </ResponsiveContainer>
       </div>
 
-      {/* Botón volver */}
       <div style={{ textAlign: "center", marginTop: "2rem" }}>
         <button
           onClick={() => navigate("/")}

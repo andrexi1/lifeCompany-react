@@ -1,38 +1,53 @@
+// src/profiles/ProfileDetail.jsx
 import { useParams, useNavigate } from "react-router-dom";
-import { useProfiles } from "../context/ProfilesContext";
+import { useEffect, useState } from "react";
 import { calculateLifeExpectancy } from "../utils/lifeExpectancyCalculator";
+import { db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function ProfileDetail() {
   const { id } = useParams();
-  const { profiles } = useProfiles();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const profile = profiles.find(p => p.id === Number(id));
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const docRef = doc(db, "profiles", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setProfile({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          setProfile(null);
+        }
+      } catch (error) {
+        console.error("Error al cargar perfil desde Firebase:", error);
+        setProfile(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div style={{ padding: "4rem", textAlign: "center" }}>
+        <h2>Cargando perfil...</h2>
+      </div>
+    );
+  }
 
   if (!profile) {
     return (
-      <div style={{ 
-        padding: "4rem", 
-        textAlign: "center", 
-        background: "#f8f9fa", 
-        borderRadius: "12px" 
-      }}>
+      <div style={{ padding: "4rem", textAlign: "center", background: "#f8f9fa", borderRadius: "12px" }}>
         <h2>Perfil no encontrado</h2>
         <p>El perfil que buscas no existe o fue eliminado.</p>
         <button 
           onClick={() => navigate("/profiles")}
-          style={{ 
-            marginTop: "1.5rem", 
-            padding: "12px 24px", 
-            background: "#0066cc", 
-            color: "white", 
-            border: "none", 
-            borderRadius: "8px", 
-            cursor: "pointer",
-            transition: "all 0.2s ease"
-          }}
-          onMouseOver={e => e.currentTarget.style.transform = "translateY(-2px)"}
-          onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
+          style={{ marginTop: "1.5rem", padding: "12px 24px", background: "#0066cc", color: "white", border: "none", borderRadius: "8px", cursor: "pointer" }}
         >
           Volver a la lista
         </button>
@@ -77,6 +92,7 @@ export default function ProfileDetail() {
 
   return (
     <div style={containerStyle}>
+      {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <h1 style={{ color: "#ffffff" }}>Detalle del Perfil: {profile.name || "Sin nombre"}</h1>
         <button 
@@ -89,7 +105,7 @@ export default function ProfileDetail() {
         </button>
       </div>
 
-      {/* Esperanza de vida destacada */}
+      {/* Esperanza de vida */}
       <div style={{
         background: expectancy?.estimatedYears > 75 ? "#d1fae5" : "#fee2e2",
         padding: "2rem",
@@ -116,7 +132,7 @@ export default function ProfileDetail() {
         )}
       </div>
 
-      {/* Secciones de datos */}
+      {/* Bloques de datos */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "2rem" }}>
         {[
           { title: "Datos básicos", items: [

@@ -1,84 +1,60 @@
 // src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
-import { users as initialUsers } from "../data/users";
+import { db } from "../firebase";
+import { collection, getDocs, addDoc, doc, deleteDoc } from "firebase/firestore";
 
 const AuthContext = createContext();
-
-const STORAGE_KEY = "health_app_user";
+export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
-  // Intentamos cargar usuario y lista de usuarios desde localStorage
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [users, setUsers] = useState([]);
+  const [user, setUser] = useState(null);
 
-  const [users, setUsers] = useState(() => {
-    const savedUsers = localStorage.getItem("health_app_users");
-    return savedUsers ? JSON.parse(savedUsers) : initialUsers;
-  });
-
-  // Guardamos usuario cuando cambia
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
+  // --- Cargar usuarios de Firestore ---
+  const fetchUsers = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const usersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setUsers(usersData);
+    } catch (error) {
+      console.error("Error al cargar usuarios:", error);
     }
-  }, [user]);
-
-  // Guardamos lista de usuarios cuando cambia
-  useEffect(() => {
-    localStorage.setItem("health_app_users", JSON.stringify(users));
-  }, [users]);
-
-  const login = (email, password) => {
-    const foundUser = users.find(
-      (u) => u.email === email && u.password === password
-    );
-
-    if (!foundUser) return null;
-
-    setUser(foundUser);
-    return foundUser;
   };
 
-  const logout = () => {
+  useEffect(() => { fetchUsers(); }, []);
+
+  // --- Login ---
+  const login = async (email, password) => {
+    const matchedUser = users.find(u => u.email === email);
+    if (!matchedUser) throw new Error("Usuario no registrado");
+    if (matchedUser.password !== password) throw new Error("Contraseña incorrecta");
+
+    setUser(matchedUser);
+    return matchedUser;
+  };
+
+  // --- Logout ---
+  const logout = (navigate) => {
     setUser(null);
-    // localStorage.removeItem(STORAGE_KEY);  ← ya lo hace el useEffect
+    if (navigate) navigate("/login");
   };
 
-  const createUser = ({ email, password, role }) => {
-    const newUser = {
-      id: Date.now(),
-      email,
-      password,
-      role,
-    };
-    setUsers((prev) => [...prev, newUser]);
-    return newUser;
+  // --- Crear usuario ---
+  const createUser = async ({ email, password, role }) => {
+    const newUser = { email, password, role, uid: crypto.randomUUID() };
+    await addDoc(collection(db, "users"), newUser);
+    fetchUsers();
   };
 
-  const deleteUser = (id) => {
-    setUsers((prev) => prev.filter((u) => u.id !== id));
+  // --- Eliminar usuario ---
+  const deleteUser = async (id) => {
+    await deleteDoc(doc(db, "users", id));
+    fetchUsers();
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        users,
-        login,
-        logout,
-        createUser,
-        deleteUser,
-      }}
-    >
+    <AuthContext.Provider value={{ users, user, login, logout, createUser, deleteUser }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  return useContext(AuthContext);
 }
