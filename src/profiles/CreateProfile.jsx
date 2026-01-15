@@ -24,42 +24,46 @@ export default function CreateProfile() {
 
   // --- Estilos ---
   const containerStyle = {
-    padding: "3rem",
-    maxWidth: "1000px",
-    margin: "0 auto",
-    background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
     minHeight: "100vh",
-    borderRadius: "12px",
+    padding: "3rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    background: "linear-gradient(135deg, #F96E5B, #FFB88C)",
   };
 
   const cardStyle = {
     background: "#ffffff",
     padding: "3rem",
     borderRadius: "16px",
-    boxShadow: "0 12px 30px rgba(0,0,0,0.15)", // sombra más marcada
-    marginBottom: "2rem",
+    boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+    width: "100%",
+    maxWidth: "900px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   };
 
   const titleStyle = {
-    marginBottom: "2rem",
-    fontSize: "2.8rem", // título más grande
+    fontSize: "2.8rem",
     fontWeight: "700",
     color: "#111827",
+    marginBottom: "2rem",
     textAlign: "center",
   };
 
   const buttonStyle = {
-    padding: "16px 36px", // botón más grande
+    padding: "16px 36px",
     borderRadius: "12px",
     border: "none",
-    fontSize: "1.3rem", // letra más grande
+    fontSize: "1.3rem",
     fontWeight: "600",
     cursor: "pointer",
     transition: "all 0.2s ease",
     background: "#0066cc",
     color: "white",
     marginTop: "2rem",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.2)", // sombra en botón
+    boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
   };
 
   const buttonHover = {
@@ -67,24 +71,30 @@ export default function CreateProfile() {
     boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
   };
 
+  const backButtonStyle = {
+    ...buttonStyle,
+    background: "#6c757d",
+    marginTop: "1.5rem",
+  };
+
   return (
     <div style={containerStyle}>
       <div style={cardStyle}>
         <h2 style={titleStyle}>Crear Nuevo Perfil</h2>
 
+        {/* Formulario de Wizard */}
         <ProfileWizard onSubmit={handleSubmit} />
 
-        <div style={{ textAlign: "center" }}>
-          <button
-            type="button"
-            style={buttonStyle}
-            onMouseOver={(e) => Object.assign(e.currentTarget.style, buttonHover)}
-            onMouseOut={(e) => Object.assign(e.currentTarget.style, buttonStyle)}
-            onClick={() => navigate("/profiles")}
-          >
-            Volver a la lista de perfiles
-          </button>
-        </div>
+        {/* Botón para volver */}
+        <button
+          type="button"
+          style={backButtonStyle}
+          onMouseOver={(e) => Object.assign(e.currentTarget.style, buttonHover)}
+          onMouseOut={(e) => Object.assign(e.currentTarget.style, backButtonStyle)}
+          onClick={() => navigate("/profiles")}
+        >
+          Volver a la lista de perfiles
+        </button>
       </div>
     </div>
   );
